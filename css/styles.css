@@ -1,0 +1,35 @@
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300&family=Playfair+Display&display=swap');
+
+/* GLOBAL STYLES */
+body {
+    background-color: #edede9;
+} 
+
+.bg-light-beige {
+    background-color: #edede9;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Playfair Display', serif;
+}
+
+p {
+    font-family: 'Open Sans', sans-serif;
+    font-size: 1.2rem; 
+}
+
+main.container-fluid {
+    width: 100%; 
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.navbar-brand {
+    margin-left: 20px;
+}
+
+img.dibley {
+    max-width: 250px; 
+    width: 100%;      
+    height: auto;    
+}
