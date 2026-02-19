@@ -52,21 +52,23 @@
         };
 
         // Step one - Create React elements
-        const headerElement = React.createElement('h1', { className: 'mt-5' }, user.name);
+        // To match the image, we will render the header, image, and bio into their respective divs
+        
+        const headerElement = React.createElement('h2', { className: 'mt-5' }, `About ${user.name}`);
         
         const imageElement = React.createElement('img', { 
             src: user.imageUrl, 
             alt: user.name, 
-            className: 'img-fluid rounded shadow-sm my-3',
-            style: { maxWidth: '300px' } 
+            className: 'img-thumbnail my-3',
+            style: { width: '200px', display: 'block' } 
         });
         
-        const bioElement = React.createElement('p', { className: 'lead' }, user.bio);
+        const bioElement = React.createElement('p', { className: 'text-justify' }, user.bio);
 
         // Step 2: Render the React elements to the existing div IDs
         ReactDOM.render(headerElement, document.getElementById('h1'));
         ReactDOM.render(imageElement, document.getElementById('img'));
-        ReactDOM.render(bioElement, document.getElementById('content'));
+        ReactDOM.render(bioElement, document.getElementById('content'));    
     </script>
 
 </main><!-- /.container -->
