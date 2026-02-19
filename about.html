@@ -40,7 +40,7 @@
 </nav>
 
 <main role="main" class="container-fluid mt-5 pt-5">
-    <div id="h1" class="mt-2"></div> 
+    <div id="h1"></div> 
     <div id="img"></div>
     <div id="content"></div>
     
@@ -54,7 +54,7 @@
         // Step one - Create React elements
         // To match the image, we will render the header, image, and bio into their respective divs
         
-        const headerElement = React.createElement('h2', { className: 'mt-5' }, `About ${user.name}`);
+        const headerElement = React.createElement('h2', { className: 'pt-3' }, `About ${user.name}`);
         
         const imageElement = React.createElement('img', { 
             src: user.imageUrl, 
