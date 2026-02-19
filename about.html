@@ -51,10 +51,22 @@
             bio: 'I’m a seasoned telecom professional with over 25 years in the industry, but I’ve never stopped building toward what’s next. When I’m not navigating the world of connectivity or enjoying life with my spouse and three children, you’ll likely find me lost in a book or immersed in my latest Lego build. I’m a firm believer that you’re never too far along in your career to pivot or grow, a philosophy I’m putting into practice as I work toward finishing my degree by December 2026.'
         };
 
-        // Step one - Create a React element
+        // Step one - Create React elements
+        const headerElement = React.createElement('h1', { className: 'mt-5' }, user.name);
+        
+        const imageElement = React.createElement('img', { 
+            src: user.imageUrl, 
+            alt: user.name, 
+            className: 'img-fluid rounded shadow-sm my-3',
+            style: { maxWidth: '300px' } 
+        });
+        
+        const bioElement = React.createElement('p', { className: 'lead' }, user.bio);
 
-        // Step 2: Render the React element
-
+        // Step 2: Render the React elements to the existing div IDs
+        ReactDOM.render(headerElement, document.getElementById('h1'));
+        ReactDOM.render(imageElement, document.getElementById('img'));
+        ReactDOM.render(bioElement, document.getElementById('content'));
     </script>
 
 </main><!-- /.container -->
