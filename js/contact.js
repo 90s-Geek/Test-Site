@@ -1,19 +1,3 @@
-/**
- * contact.js
- * Handles contact form validation and submission.
- *
- * Submission strategy:
- *   1. Client-side Bootstrap validation (HTML5 constraint API).
- *   2. AJAX POST to Formspree.
- *      → Sign up free at https://formspree.io and create a form targeting
- *        john-mark.holland@mymail.champlain.edu, then replace FORMSPREE_ID below.
- *   3. On success: show the Bootstrap success alert and reset the form.
- *   4. On network/server failure: fall back to a mailto: link so the message
- *      is never completely lost.
- *
- * No jQuery required — vanilla JS only.
- */
-
 (function () {
     'use strict';
 
