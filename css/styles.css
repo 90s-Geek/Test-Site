@@ -27,6 +27,13 @@ p {
     font-family: 'Open Sans', sans-serif;
 }
 
+/* ── Site Wrapper (centers content, max 1000px) ─────────────────────────── */
+.site-wrapper {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 0 1rem;
+}
+
 /* ── Layout ─────────────────────────────────────────────────────────────── */
 main.container-fluid {
     width: 100%;
@@ -39,11 +46,32 @@ main.container-fluid {
     margin-left: 20px;
 }
 
-/* ── Home page pet image ─────────────────────────────────────────────────── */
-img.dibley {
-    max-width: 250px;
-    width: 100%;
+/* Active nav link indicator */
+.navbar-nav .nav-link.active {
+    border-bottom: 2px solid #fff;
+    padding-bottom: calc(0.5rem - 2px);
+}
+
+/* ── Hero Image ─────────────────────────────────────────────────────────── */
+.hero-img {
+    max-width: 100%;
     height: auto;
+    width: 350px;
+}
+
+/* ── Home Hero section ───────────────────────────────────────────────────── */
+.home-hero {
+    margin-top: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+/* ── Section spacing ─────────────────────────────────────────────────────── */
+section {
+    margin-bottom: 2rem;
+}
+
+section h2 {
+    margin-bottom: 1rem;
 }
 
 /* ── Carousel ────────────────────────────────────────────────────────────── */
@@ -70,27 +98,60 @@ footer p {
     margin: 0;
 }
 
-/* ── Responsive ──────────────────────────────────────────────────────────── */
+/* ── Tablet (≤768px) ──────────────────────────────────────────────────── */
+@media (max-width: 768px) {
+    img {
+        max-width: 100%;
+        height: auto;
+    }
 
-/* Slightly reduce base font size on small screens */
-@media (max-width: 576px) {
+    .hero-img {
+        width: 100%;
+        max-width: 300px;
+        display: block;
+        margin: 0 auto;
+    }
+
+    .home-hero .row {
+        text-align: center;
+    }
+
+    h1 {
+        font-size: 1.9rem;
+    }
+
+    h2 {
+        font-size: 1.5rem;
+    }
+
+    .site-wrapper {
+        padding: 0 0.75rem;
+    }
+}
+
+/* ── Phone (≤480px) ──────────────────────────────────────────────────── */
+@media (max-width: 480px) {
     p {
         font-size: 1rem;
     }
 
     h1 {
-        font-size: 1.75rem;
+        font-size: 1.6rem;
     }
 
     h2 {
-        font-size: 1.4rem;
+        font-size: 1.3rem;
     }
-}
 
-/* Ensure images don't overflow on small screens */
-@media (max-width: 768px) {
-    img {
-        max-width: 100%;
-        height: auto;
+    .hero-img {
+        max-width: 240px;
+    }
+
+    .site-wrapper {
+        padding: 0 0.5rem;
+    }
+
+    footer p {
+        font-size: 0.85rem;
     }
 }
