@@ -3,8 +3,8 @@
 
     // ── Configuration ──────────────────────────────────────────────────────
     // Replace with your real Formspree form ID after signing up at formspree.io
-    var FORMSPREE_ID = 'YOUR_FORMSPREE_ID';
-    var FORMSPREE_ENDPOINT = 'https://formspree.io/f/' + FORMSPREE_ID;
+    var FORMSPREE_ID = 'xgolrjqp';
+    var FORMSPREE_ENDPOINT = 'https://formspree.io/f/xgolrjqp' + FORMSPREE_ID;
 
     // Fallback mailto (used if Formspree hasn't been configured yet)
     var FALLBACK_EMAIL = 'john-mark.holland@mymail.champlain.edu';
