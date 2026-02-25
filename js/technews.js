@@ -1,105 +1,182 @@
 /**
  * technews.js
- * Fetches RSS feeds from popular tech news sources via the rss2json.com public API
- * and renders them as Bootstrap-compatible card grids inside the tab panes.
+ * Fetches tech news using a cascade of strategies:
+ *
+ *   1. RSS feeds via allorigins.win (CORS proxy, free, no key)
+ *      -> parses the raw XML client-side
+ *   2. RSS feeds via corsproxy.io as a secondary fallback proxy
+ *   3. Hacker News top stories via the official Firebase REST API
+ *      (always works - free, no key, CORS-enabled by Google)
  *
  * Sources:
- *   - The Verge      : https://www.theverge.com/rss/index.xml
- *   - Ars Technica   : https://feeds.arstechnica.com/arstechnica/index
- *   - Wired          : https://www.wired.com/feed/rss
- *   - Hacker News    : https://hnrss.org/frontpage
+ *   The Verge    : https://www.theverge.com/rss/index.xml
+ *   Ars Technica : https://feeds.arstechnica.com/arstechnica/index
+ *   Wired        : https://www.wired.com/feed/rss
+ *   Hacker News  : https://hacker-news.firebaseio.com (direct API)
  */
 
 (function () {
     'use strict';
 
-    // ── Configuration ──────────────────────────────────────────────────────
-    const API_BASE = 'https://api.rss2json.com/v1/api.json?rss_url=';
-    const ITEMS_PER_FEED = 8; // articles pulled per source
+    var ITEMS_PER_FEED = 8;
 
-    const FEEDS = [
+    /* CORS proxy templates - %URL% replaced with encoded feed URL */
+    var PROXIES = [
+        'https://api.allorigins.win/get?url=%URL%',
+        'https://corsproxy.io/?%URL%'
+    ];
+
+    var FEEDS = [
         {
-            id: 'verge',
-            label: 'The Verge',
+            id:         'verge',
+            label:      'The Verge',
             badgeClass: 'badge-verge',
-            url: 'https://www.theverge.com/rss/index.xml',
-            container: 'verge-container'
+            url:        'https://www.theverge.com/rss/index.xml',
+            container:  'verge-container'
         },
         {
-            id: 'ars',
-            label: 'Ars Technica',
+            id:         'ars',
+            label:      'Ars Technica',
             badgeClass: 'badge-ars',
-            url: 'https://feeds.arstechnica.com/arstechnica/index',
-            container: 'ars-container'
+            url:        'https://feeds.arstechnica.com/arstechnica/index',
+            container:  'ars-container'
         },
         {
-            id: 'wired',
-            label: 'Wired',
+            id:         'wired',
+            label:      'Wired',
             badgeClass: 'badge-wired',
-            url: 'https://www.wired.com/feed/rss',
-            container: 'wired-container'
-        },
-        {
-            id: 'hn',
-            label: 'Hacker News',
-            badgeClass: 'badge-hn',
-            url: 'https://hnrss.org/frontpage',
-            container: 'hn-container'
+            url:        'https://www.wired.com/feed/rss',
+            container:  'wired-container'
         }
     ];
 
-    // ── Helpers ────────────────────────────────────────────────────────────
+    /* ---- XML Parsing -------------------------------------------------- */
 
-    /**
-     * Format an ISO/RFC date string into a readable short date.
-     * @param {string} dateStr
-     * @returns {string}
-     */
-    function formatDate(dateStr) {
-        if (!dateStr) return '';
-        const d = new Date(dateStr);
-        if (isNaN(d)) return dateStr;
+    function parseXML(xmlStr) {
+        var parser = new DOMParser();
+        var doc    = parser.parseFromString(xmlStr, 'application/xml');
+
+        if (doc.querySelector('parsererror')) {
+            throw new Error('XML parse error');
+        }
+
+        var nodes = Array.from(doc.querySelectorAll('item, entry'));
+
+        return nodes.map(function (node) {
+            var titleEl = node.querySelector('title');
+            var title   = titleEl ? (titleEl.textContent || '').trim() : 'Untitled';
+
+            var linkEl = node.querySelector('link');
+            var link   = '';
+            if (linkEl) {
+                link = linkEl.getAttribute('href') || linkEl.textContent || '';
+                link = link.trim();
+            }
+
+            var dateEl  = node.querySelector('pubDate, published, updated');
+            var pubDate = dateEl ? dateEl.textContent.trim() : '';
+
+            return { title: title, link: link, pubDate: pubDate };
+        });
+    }
+
+    /* ---- CORS Proxy Fetching ------------------------------------------ */
+
+    function fetchViaProxy(proxyTemplate, feedUrl) {
+        var url = proxyTemplate.replace('%URL%', encodeURIComponent(feedUrl));
+        return fetch(url, { headers: { 'Accept': 'application/json, text/plain, */*' } })
+            .then(function (res) {
+                if (!res.ok) throw new Error('HTTP ' + res.status);
+                var ct = res.headers.get('content-type') || '';
+                if (ct.indexOf('application/json') !== -1 || ct.indexOf('text/javascript') !== -1) {
+                    return res.json().then(function (json) {
+                        if (json && typeof json.contents === 'string') return json.contents;
+                        throw new Error('Unexpected JSON shape from proxy');
+                    });
+                }
+                return res.text();
+            });
+    }
+
+    function fetchFeedWithFallback(feedUrl) {
+        var chain = Promise.reject(new Error('Starting proxy chain'));
+
+        PROXIES.forEach(function (proxy) {
+            chain = chain.catch(function () {
+                return fetchViaProxy(proxy, feedUrl).then(parseXML);
+            });
+        });
+
+        return chain;
+    }
+
+    /* ---- Hacker News Firebase API (no key, always CORS-ok) ------------ */
+
+    function fetchHackerNews() {
+        return fetch('https://hacker-news.firebaseio.com/v0/topstories.json')
+            .then(function (res) {
+                if (!res.ok) throw new Error('HN list HTTP ' + res.status);
+                return res.json();
+            })
+            .then(function (ids) {
+                var topIds = ids.slice(0, ITEMS_PER_FEED);
+                return Promise.all(topIds.map(function (id) {
+                    return fetch('https://hacker-news.firebaseio.com/v0/item/' + id + '.json')
+                        .then(function (r) { return r.json(); })
+                        .then(function (story) {
+                            if (!story) return null;
+                            return {
+                                title:   story.title || 'Untitled',
+                                link:    story.url   || ('https://news.ycombinator.com/item?id=' + story.id),
+                                pubDate: story.time  ? new Date(story.time * 1000).toISOString() : ''
+                            };
+                        })
+                        .catch(function () { return null; });
+                }));
+            })
+            .then(function (stories) { return stories.filter(Boolean); });
+    }
+
+    /* ---- Rendering ---------------------------------------------------- */
+
+    function fmtDate(str) {
+        if (!str) return '';
+        var d = new Date(str);
+        if (isNaN(d)) return str;
         return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
     }
 
-    /**
-     * Render an array of feed items into a target container element.
-     * @param {HTMLElement} container
-     * @param {Array}       items
-     * @param {string}      label
-     * @param {string}      badgeClass
-     */
     function renderItems(container, items, label, badgeClass) {
         if (!items || items.length === 0) {
-            container.innerHTML = '<p class="text-muted">No articles found.</p>';
+            container.innerHTML = '<p class="text-muted">No articles found for this source.</p>';
             return;
         }
 
-        const grid = document.createElement('div');
+        var grid = document.createElement('div');
         grid.className = 'news-grid';
 
         items.slice(0, ITEMS_PER_FEED).forEach(function (item) {
-            const card = document.createElement('article');
+            var card  = document.createElement('article');
             card.className = 'news-card';
 
-            const badge = document.createElement('span');
+            var badge = document.createElement('span');
             badge.className = 'source-badge ' + badgeClass;
             badge.textContent = label;
 
-            const heading = document.createElement('h3');
-            const link = document.createElement('a');
-            link.href = item.link || '#';
-            link.target = '_blank';
-            link.rel = 'noopener noreferrer';
-            link.textContent = item.title || 'Untitled';
-            heading.appendChild(link);
+            var h3 = document.createElement('h3');
+            var a  = document.createElement('a');
+            a.href = item.link || '#';
+            a.target = '_blank';
+            a.rel    = 'noopener noreferrer';
+            a.textContent = item.title;
+            h3.appendChild(a);
 
-            const meta = document.createElement('p');
+            var meta = document.createElement('p');
             meta.className = 'news-meta';
-            meta.textContent = formatDate(item.pubDate);
+            meta.textContent = fmtDate(item.pubDate);
 
             card.appendChild(badge);
-            card.appendChild(heading);
+            card.appendChild(h3);
             card.appendChild(meta);
             grid.appendChild(card);
         });
@@ -108,91 +185,86 @@
         container.appendChild(grid);
     }
 
-    /**
-     * Show an error message inside a container.
-     * @param {HTMLElement} container
-     * @param {string}      message
-     */
-    function renderError(container, message) {
+    function renderError(container, msg) {
         container.innerHTML =
             '<div class="news-error">' +
-            '<strong>Could not load feed.</strong> ' + message +
-            ' Please try refreshing or visit the source directly.' +
+            '<strong>Could not load feed.</strong> ' + msg +
             '</div>';
     }
 
-    /**
-     * Fetch a single RSS feed and render it.
-     * @param {Object} feed  — an entry from FEEDS[]
-     * @returns {Promise<Array>}  resolved items (for "All" aggregation)
-     */
-    function fetchFeed(feed) {
-        const url = API_BASE + encodeURIComponent(feed.url) + '&count=' + ITEMS_PER_FEED;
-        const container = document.getElementById(feed.container);
+    /* ---- Orchestration ------------------------------------------------- */
 
-        return fetch(url)
-            .then(function (response) {
-                if (!response.ok) throw new Error('HTTP ' + response.status);
-                return response.json();
-            })
-            .then(function (data) {
-                if (data.status !== 'ok') throw new Error(data.message || 'Feed error');
-                renderItems(container, data.items, feed.label, feed.badgeClass);
-                // Attach source metadata for "All" tab aggregation
-                return (data.items || []).slice(0, ITEMS_PER_FEED).map(function (item) {
+    function loadFeed(feed) {
+        var container = document.getElementById(feed.container);
+
+        return fetchFeedWithFallback(feed.url)
+            .then(function (items) {
+                renderItems(container, items, feed.label, feed.badgeClass);
+                return items.slice(0, ITEMS_PER_FEED).map(function (item) {
                     return Object.assign({}, item, { _feed: feed });
                 });
             })
             .catch(function (err) {
-                renderError(container, err.message);
+                renderError(container, 'Unable to reach this feed. (' + err.message + ')');
                 return [];
             });
     }
 
-    /**
-     * Build the "All Sources" tab by merging and sorting all feed items by date.
-     * @param {Array} allItems
-     */
-    function buildAllTab(allItems) {
-        const container = document.getElementById('all-news-container');
+    function loadHackerNews() {
+        var container    = document.getElementById('hn-container');
+        var hnFeedMeta   = { label: 'Hacker News', badgeClass: 'badge-hn' };
 
-        // Sort newest-first
+        return fetchHackerNews()
+            .then(function (items) {
+                renderItems(container, items, hnFeedMeta.label, hnFeedMeta.badgeClass);
+                return items.map(function (item) {
+                    return Object.assign({}, item, { _feed: hnFeedMeta });
+                });
+            })
+            .catch(function (err) {
+                renderError(container, 'Unable to reach Hacker News. (' + err.message + ')');
+                return [];
+            });
+    }
+
+    function buildAllTab(allItems) {
+        var container = document.getElementById('all-news-container');
+
         allItems.sort(function (a, b) {
             return new Date(b.pubDate) - new Date(a.pubDate);
         });
 
         if (allItems.length === 0) {
-            renderError(container, 'Unable to load any feeds at this time.');
+            renderError(container, 'Unable to load any feeds. Please try refreshing.');
             return;
         }
 
-        const grid = document.createElement('div');
+        var grid = document.createElement('div');
         grid.className = 'news-grid';
 
         allItems.forEach(function (item) {
-            const feed = item._feed;
-
-            const card = document.createElement('article');
+            var feed  = item._feed;
+            var card  = document.createElement('article');
             card.className = 'news-card';
 
-            const badge = document.createElement('span');
-            badge.className = 'source-badge ' + feed.badgeClass;
+            var badge = document.createElement('span');
+            badge.className = 'source-badge ' + (feed.badgeClass || 'badge-default');
             badge.textContent = feed.label;
 
-            const heading = document.createElement('h3');
-            const link = document.createElement('a');
-            link.href = item.link || '#';
-            link.target = '_blank';
-            link.rel = 'noopener noreferrer';
-            link.textContent = item.title || 'Untitled';
-            heading.appendChild(link);
+            var h3 = document.createElement('h3');
+            var a  = document.createElement('a');
+            a.href = item.link || '#';
+            a.target = '_blank';
+            a.rel    = 'noopener noreferrer';
+            a.textContent = item.title;
+            h3.appendChild(a);
 
-            const meta = document.createElement('p');
+            var meta = document.createElement('p');
             meta.className = 'news-meta';
-            meta.textContent = formatDate(item.pubDate);
+            meta.textContent = fmtDate(item.pubDate);
 
             card.appendChild(badge);
-            card.appendChild(heading);
+            card.appendChild(h3);
             card.appendChild(meta);
             grid.appendChild(card);
         });
@@ -201,17 +273,19 @@
         container.appendChild(grid);
     }
 
-    // ── Init ───────────────────────────────────────────────────────────────
-    document.addEventListener('DOMContentLoaded', function () {
-        const feedPromises = FEEDS.map(fetchFeed);
+    /* ---- Entry Point --------------------------------------------------- */
 
-        Promise.all(feedPromises).then(function (results) {
-            // Flatten all returned item arrays
-            const allItems = results.reduce(function (acc, items) {
-                return acc.concat(items);
-            }, []);
-            buildAllTab(allItems);
-        });
+    document.addEventListener('DOMContentLoaded', function () {
+        var rssPromises = FEEDS.map(loadFeed);
+        var hnPromise   = loadHackerNews();
+
+        Promise.all(rssPromises.concat([hnPromise]))
+            .then(function (results) {
+                var allItems = results.reduce(function (acc, items) {
+                    return acc.concat(items);
+                }, []);
+                buildAllTab(allItems);
+            });
     });
 
 }());
