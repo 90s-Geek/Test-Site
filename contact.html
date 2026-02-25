@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Contact John Holland - WEBD-225 Student">
+    <meta name="author" content="John Holland">
+    <title>Contact: John Holland</title>
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="images/favicon.svg">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/styles.css" rel="stylesheet">
+    <link href="css/contact.css" rel="stylesheet">
+</head>
+<body class="bg-light-beige">
+
+<!-- Navigation -->
+<nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="index.html">John Holland</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarsExampleDefault"
+            aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+            <ul class="navbar-nav me-auto mb-2 mb-md-0">
+                <li class="nav-item">
+                    <a class="nav-link" href="index.html">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="grid.html">Grid</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="carousel.html">Carousel</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="about.html">About</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="technews.html">Tech News</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="contact.html">Contact</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<!-- Main Content -->
+<main role="main" class="container mt-5 pt-5">
+
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+
+            <h1 class="mt-4 mb-2">Get in Touch</h1>
+            <p class="lead mb-4">
+                Have a question, comment, or just want to connect? Fill out the form below
+                and I'll get back to you as soon as possible.
+            </p>
+
+            <!-- Success Alert (hidden by default, shown after submission) -->
+            <div class="alert alert-success alert-dismissible fade" id="successAlert" role="alert" aria-live="polite">
+                <strong>Message sent!</strong> Thanks for reaching out. I'll reply soon.
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+
+            <!-- Contact Form -->
+            <!-- 
+                The form action points to Formspree (a free, no-back-end email relay).
+                Replace "YOUR_FORMSPREE_ID" in contact.js with an ID obtained at
+                https://formspree.io after signing up with john-mark.holland@mymail.champlain.edu.
+                As a fallback, the JS sends the data via the Formspree AJAX endpoint.
+            -->
+            <form id="contactForm" novalidate aria-label="Contact form">
+
+                <!-- Name row -->
+                <div class="row g-3 mb-3">
+                    <div class="col-sm-6">
+                        <label for="firstName" class="form-label">First Name <span class="text-danger" aria-hidden="true">*</span></label>
+                        <input type="text" class="form-control" id="firstName" name="firstName"
+                            placeholder="Jane" autocomplete="given-name" required>
+                        <div class="invalid-feedback">Please enter your first name.</div>
+                    </div>
+                    <div class="col-sm-6">
+                        <label for="lastName" class="form-label">Last Name <span class="text-danger" aria-hidden="true">*</span></label>
+                        <input type="text" class="form-control" id="lastName" name="lastName"
+                            placeholder="Doe" autocomplete="family-name" required>
+                        <div class="invalid-feedback">Please enter your last name.</div>
+                    </div>
+                </div>
+
+                <!-- Email -->
+                <div class="mb-3">
+                    <label for="email" class="form-label">Email Address <span class="text-danger" aria-hidden="true">*</span></label>
+                    <input type="email" class="form-control" id="email" name="email"
+                        placeholder="jane.doe@example.com" autocomplete="email" required>
+                    <div class="invalid-feedback">Please enter a valid email address.</div>
+                </div>
+
+                <!-- Subject -->
+                <div class="mb-3">
+                    <label for="subject" class="form-label">Subject <span class="text-danger" aria-hidden="true">*</span></label>
+                    <input type="text" class="form-control" id="subject" name="subject"
+                        placeholder="What's this about?" required>
+                    <div class="invalid-feedback">Please enter a subject.</div>
+                </div>
+
+                <!-- Message -->
+                <div class="mb-3">
+                    <label for="message" class="form-label">Message <span class="text-danger" aria-hidden="true">*</span></label>
+                    <textarea class="form-control" id="message" name="message" rows="6"
+                        placeholder="Your message here..." required></textarea>
+                    <div class="invalid-feedback">Please enter a message.</div>
+                </div>
+
+                <!-- How did you hear (optional) -->
+                <div class="mb-4">
+                    <label for="hearAbout" class="form-label">How did you hear about this site? <span class="text-muted small">(optional)</span></label>
+                    <select class="form-select" id="hearAbout" name="hearAbout">
+                        <option value="" selected>— Select an option —</option>
+                        <option value="search">Search engine</option>
+                        <option value="social">Social media</option>
+                        <option value="colleague">A colleague or friend</option>
+                        <option value="champlain">Champlain College</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+
+                <!-- Submit -->
+                <div class="d-grid d-sm-flex gap-2">
+                    <button type="submit" class="btn btn-dark btn-lg px-5" id="submitBtn">
+                        Send Message
+                    </button>
+                    <button type="reset" class="btn btn-outline-secondary btn-lg">
+                        Clear
+                    </button>
+                </div>
+
+            </form>
+
+            <hr class="my-5">
+
+            <!-- Direct contact info -->
+            <section aria-label="Direct contact information">
+                <h2 class="mb-3">Direct Contact</h2>
+                <p>You can also reach me directly by email at
+                    <a href="mailto:john-mark.holland@mymail.champlain.edu">john-mark.holland@mymail.champlain.edu</a>.
+                    I'm a current student at Champlain College pursuing my degree in web development, expected December 2026.
+                </p>
+            </section>
+
+        </div>
+    </div>
+
+</main>
+
+<!-- Footer -->
+<footer class="bg-dark text-light mt-5 py-4">
+    <div class="container text-center">
+        <p class="mb-1">&copy; 2025 John Holland &mdash; WEBD-225</p>
+        <p class="mb-0 small text-secondary">Built with Bootstrap 5 &bull; Champlain College</p>
+    </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+    crossorigin="anonymous"></script>
+<script src="js/contact.js"></script>
+
+</body>
+</html>
