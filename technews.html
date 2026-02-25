@@ -84,8 +84,6 @@
 <script>
     /**
      * Fetch the top 16 Hacker News stories using the official Firebase REST API.
-     * No API key needed. Fully CORS-enabled by Google/Firebase.
-     * All logic is self-contained here — no external JS file required.
      */
     (function () {
         'use strict';
@@ -95,8 +93,6 @@
         var container    = document.getElementById('hn-container');
         var loadingEl    = document.getElementById('hn-loading');
         var errorEl      = document.getElementById('hn-error');
-
-        /* ── Helpers ──────────────────────────────────────────────── */
 
         function fmtDate(unixSecs) {
             if (!unixSecs) return '';
@@ -109,18 +105,14 @@
             errorEl.classList.remove('d-none');
         }
 
-        /* ── Build a single story card ────────────────────────────── */
-
         function buildCard(story, rank) {
             var card = document.createElement('article');
             card.className = 'news-card';
 
-            /* Rank badge */
             var rankEl = document.createElement('span');
             rankEl.className = 'rank-badge';
             rankEl.textContent = '#' + rank;
 
-            /* Headline link */
             var h3 = document.createElement('h3');
             var a  = document.createElement('a');
             a.href        = story.url || ('https://news.ycombinator.com/item?id=' + story.id);
@@ -129,7 +121,6 @@
             a.textContent = story.title || 'Untitled';
             h3.appendChild(a);
 
-            /* Meta: points, comments, date */
             var meta = document.createElement('p');
             meta.className = 'news-meta';
 
@@ -148,8 +139,6 @@
             card.appendChild(meta);
             return card;
         }
-
-        /* ── Fetch & render ───────────────────────────────────────── */
 
         fetch(HN_BASE + '/topstories.json')
             .then(function (res) {
