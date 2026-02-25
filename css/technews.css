@@ -1,38 +1,15 @@
 /* ==========================================================================
-   technews.css — Styles for the Tech News page
+   technews.css — Styles for the Tech News (Hacker News) page
    Matches site palette: #edede9 background, Playfair Display headings,
    Open Sans body text, Bootstrap 5 dark navbar.
    ========================================================================== */
-
-/* ── Tab Customisation ─────────────────────────────────────────────────── */
-#newsTabs .nav-link {
-    color: #4a4e69;
-    font-family: 'Open Sans', sans-serif;
-    font-size: 0.95rem;
-    border-bottom: 2px solid transparent;
-    transition: color 0.2s, border-color 0.2s;
-}
-
-#newsTabs .nav-link:hover {
-    color: #22223b;
-    border-bottom-color: #9a8c98;
-    background-color: transparent;
-}
-
-#newsTabs .nav-link.active {
-    color: #22223b;
-    background-color: transparent;
-    border-color: #dee2e6 #dee2e6 #edede9;
-    border-bottom: 2px solid #22223b;
-    font-weight: 600;
-}
 
 /* ── News Card Grid ─────────────────────────────────────────────────────── */
 .news-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
     gap: 1.25rem;
-    margin-bottom: 2rem;
+    margin-bottom: 3rem;
 }
 
 /* ── Individual News Card ───────────────────────────────────────────────── */
@@ -51,32 +28,28 @@
     transform: translateY(-2px);
 }
 
-/* Source badge */
-.news-card .source-badge {
+/* Rank badge */
+.rank-badge {
     display: inline-block;
     font-family: 'Open Sans', sans-serif;
     font-size: 0.72rem;
     font-weight: 600;
     letter-spacing: 0.06em;
-    text-transform: uppercase;
+    color: #c2410c;
+    background-color: #fff3eb;
     padding: 0.18rem 0.55rem;
     border-radius: 3px;
     margin-bottom: 0.65rem;
     width: fit-content;
 }
 
-.badge-verge     { background-color: #e8f5f0; color: #1a6b4a; }
-.badge-ars       { background-color: #fff3e0; color: #b45309; }
-.badge-wired     { background-color: #f0f0f0; color: #222; }
-.badge-hn        { background-color: #fff3eb; color: #c2410c; }
-.badge-default   { background-color: #ede9f5; color: #4a4e69; }
-
-/* Card headline link */
+/* Card headline */
 .news-card h3 {
     font-family: 'Playfair Display', serif;
-    font-size: 1.1rem;
+    font-size: 1.05rem;
     line-height: 1.4;
     margin-bottom: 0.5rem;
+    flex-grow: 1;
 }
 
 .news-card h3 a {
@@ -89,16 +62,27 @@
     text-decoration: underline;
 }
 
-/* Card meta (date) */
-.news-card .news-meta {
+/* Card meta (points, comments, date) */
+.news-meta {
     font-family: 'Open Sans', sans-serif;
     font-size: 0.8rem;
     color: #888;
     margin-top: auto;
     padding-top: 0.75rem;
+    margin-bottom: 0;
 }
 
-/* ── Error / Empty State ─────────────────────────────────────────────────── */
+.news-meta a {
+    color: #888;
+    text-decoration: underline;
+    text-decoration-color: #ccc;
+}
+
+.news-meta a:hover {
+    color: #4a4e69;
+}
+
+/* ── Error State ─────────────────────────────────────────────────────────── */
 .news-error {
     background: #fff8f0;
     border: 1px solid #f0d9c0;
@@ -108,19 +92,9 @@
     font-family: 'Open Sans', sans-serif;
 }
 
-/* ── Responsive Tweaks ───────────────────────────────────────────────────── */
+/* ── Responsive ──────────────────────────────────────────────────────────── */
 @media (max-width: 576px) {
     .news-grid {
         grid-template-columns: 1fr;
-    }
-
-    #newsTabs {
-        flex-wrap: nowrap;
-        overflow-x: auto;
-        -webkit-overflow-scrolling: touch;
-    }
-
-    #newsTabs .nav-item {
-        flex-shrink: 0;
     }
 }
