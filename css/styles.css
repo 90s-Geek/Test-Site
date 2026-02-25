@@ -1,35 +1,96 @@
-@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300&family=Playfair+Display&display=swap');
+/* ==========================================================================
+   styles.css — Global styles for John Holland WEBD-225
+   ========================================================================== */
 
-/* GLOBAL STYLES */
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600&family=Playfair+Display:wght@400;700&display=swap');
+
+/* ── Global ─────────────────────────────────────────────────────────────── */
 body {
     background-color: #edede9;
-} 
+}
 
 .bg-light-beige {
     background-color: #edede9;
 }
 
+/* ── Typography ─────────────────────────────────────────────────────────── */
 h1, h2, h3, h4, h5, h6 {
     font-family: 'Playfair Display', serif;
 }
 
 p {
     font-family: 'Open Sans', sans-serif;
-    font-size: 1.2rem; 
+    font-size: 1.1rem;
 }
 
+.lead {
+    font-family: 'Open Sans', sans-serif;
+}
+
+/* ── Layout ─────────────────────────────────────────────────────────────── */
 main.container-fluid {
-    width: 100%; 
+    width: 100%;
     max-width: 1200px;
     margin: 0 auto;
 }
 
+/* ── Navbar ─────────────────────────────────────────────────────────────── */
 .navbar-brand {
     margin-left: 20px;
 }
 
+/* ── Home page pet image ─────────────────────────────────────────────────── */
 img.dibley {
-    max-width: 250px; 
-    width: 100%;      
-    height: auto;    
+    max-width: 250px;
+    width: 100%;
+    height: auto;
+}
+
+/* ── Carousel ────────────────────────────────────────────────────────────── */
+#petCarousel {
+    max-width: 800px;
+    margin: 0 auto;
+    border-radius: 0.5rem;
+    overflow: hidden;
+}
+
+.carousel-item img {
+    height: auto;
+    max-height: 600px;
+    object-fit: cover;
+}
+
+/* ── Footer ──────────────────────────────────────────────────────────────── */
+footer {
+    font-family: 'Open Sans', sans-serif;
+}
+
+footer p {
+    font-size: 0.95rem;
+    margin: 0;
+}
+
+/* ── Responsive ──────────────────────────────────────────────────────────── */
+
+/* Slightly reduce base font size on small screens */
+@media (max-width: 576px) {
+    p {
+        font-size: 1rem;
+    }
+
+    h1 {
+        font-size: 1.75rem;
+    }
+
+    h2 {
+        font-size: 1.4rem;
+    }
+}
+
+/* Ensure images don't overflow on small screens */
+@media (max-width: 768px) {
+    img {
+        max-width: 100%;
+        height: auto;
+    }
 }
