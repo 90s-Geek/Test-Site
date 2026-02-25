@@ -2,8 +2,8 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="John Holland - WEBD-225 Home Page">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="John Holland – WEBD-225 student at Champlain College. Seasoned telecom professional, geek at heart, and lifelong learner.">
     <meta name="author" content="John Holland">
     <title>John Holland: Home</title>
     
@@ -13,65 +13,67 @@
 </head>
 <body class="bg-light-beige">
 
-<nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
-    <div class="container-fluid">
-        <a class="navbar-brand" href="index.html">John Holland</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-
-        <div class="collapse navbar-collapse" id="navbarsExampleDefault">
-            <ul class="navbar-nav me-auto mb-2 mb-md-0"> 
-                <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="index.html">Home</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="grid.html">Grid</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="carousel.html">Carousel</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="about.html">About</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="technews.html">Tech News</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="contact.html">Contact</a>
-                </li>
-            </ul>
+<header>
+    <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="index.html">John Holland</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+                <ul class="navbar-nav me-auto mb-2 mb-md-0"> 
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="index.html">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="grid.html">Grid</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="carousel.html">Carousel</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="about.html">About</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="technews.html">Tech News</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="contact.html">Contact</a>
+                    </li>
+                </ul>
+            </div>
         </div>
-    </div>
-</nav>
+    </nav>
+</header>
 
 <main role="main" class="container-fluid mt-5 pt-5">
-    <div class="container home_2col mb-5">
-        <div class="row">
-            <div class="col-md-6">
-                <img src="images/GEEK-1.webp" class="rounded d-block img-fluid" alt="Geek image" style="max-width: 350px;">
-            </div>
-            <div class="col-md-6 d-flex align-items-center justify-content-center">
-                <h1>John Holland: WEBD-225</h1>
+    <div class="site-wrapper">
+        <div class="home-hero mb-5">
+            <div class="row align-items-center">
+                <div class="col-md-6">
+                    <img src="images/GEEK-1.webp"
+                         class="rounded d-block hero-img"
+                         alt="Retro cartoon of a stylish computer geek with glasses">
+                </div>
+                <div class="col-md-6 d-flex align-items-center justify-content-center mt-4 mt-md-0">
+                    <h1>John Holland: WEBD-225</h1>
+                </div>
             </div>
         </div>
-    </div>
 
-    <div class="container px-0">
         <p class="lead">This image says it all for me. I've always considered myself a geek at heart. I've been asked many times what the difference is between a geek and nerd. In case you've ever wondered, a geek is a nerd with style!</p>
         
         <hr class="my-4">
 
-        <article>
+        <section aria-label="Geek Themed Dad Jokes">
             <h2 class="mb-3">Geek Themed Dad Jokes</h2>
             <p class="mb-3">Why did the computer geek get locked out of his house? Because he kept trying to enter his password on the door.</p>
             <p class="mb-3">Why did the computer geek always stay calm? Because he had lots of cache to fall back on.</p>
-            <p>Why did the computer geek get glasses? Because he couldn’t C# anymore.</p>
-        </article>
+            <p>Why did the computer geek get glasses? Because he couldn't C# anymore.</p>
+        </section>
     </div>
 </main>
 
-<!-- Footer -->
 <footer class="bg-dark text-light mt-5 py-4">
     <div class="container text-center">
         <p class="mb-1">&copy; 2025 John Holland &mdash; WEBD-225</p>
@@ -80,6 +82,5 @@
 </footer>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-
 </body>
 </html>
